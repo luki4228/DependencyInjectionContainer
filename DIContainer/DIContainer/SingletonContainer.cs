@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DIContainer
 {
-    class SingletonContainer
+    public class SingletonContainer
     {
         public volatile object instance;
         public object syncRoot = new object();
