@@ -8,5 +8,15 @@ namespace DIContainer
 {
     public class DIProvider
     {
+        public DIProvider(DIConfig configuration)
+        {
+
+        }
+
+        public TImplementation Resolve<TImplementation>()
+        {
+            throw new NotImplementedException();
+        }
+    
     }
 }
