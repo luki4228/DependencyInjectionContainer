@@ -8,9 +8,11 @@ namespace DIContainer
 {
     public class DIProvider
     {
-        public DIProvider(DIConfig configuration)
-        {
+        DIConfig config;
 
+        public DIProvider(DIConfig _config)
+        {
+            config = _config;
         }
 
         public TImplementation Resolve<TImplementation>()
