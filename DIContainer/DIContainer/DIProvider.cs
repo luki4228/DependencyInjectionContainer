@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace DIContainer
 {
@@ -65,11 +66,57 @@ namespace DIContainer
                 throw new KeyNotFoundException($"Dependency {depType.ToString()} is not registered.");
             }
 
-            List<TDependency> result = new List<TDependency>();
+            List<TDependency> res = new List<TDependency>();
 
-            
+            if (depType.IsGenericType && config.DContainer.ContainsKey(depType.GetGenericTypeDefinition()))
+            {
 
-            return result;
+                var implements = config.DContainer[depType.GetGenericTypeDefinition()];
+                foreach (var implement in implements)
+                {
+                    var genericType = implement.MakeGenericType(depType.GetGenericArguments());
+                    var resolved = (TDependency)CreateInstance(genericType);
+                    res.Add(resolved);
+                }
+
+                return res;
+
+            }
+            else
+            if (!config.DContainer.ContainsKey(depType))
+            {
+                throw new KeyNotFoundException($"Dependency {depType.ToString()} is not registered.");
+            }
+
+            foreach (var implement in config.DContainer[depType])
+            {
+
+                TDependency resolved;
+                if (config.ObjectSettings[implement])
+                {
+                    if (config.OContainer[implement].instance == null)
+                    {
+                        lock (config.OContainer[implement].syncRoot)
+                        {
+                            if (config.OContainer[implement].instance == null)
+                            {
+                                config.OContainer[implement].instance = CreateInstance(implement);
+                            }
+                        }
+                    }
+
+                    resolved = (TDependency)config.OContainer[implement].instance;
+
+                }
+                else
+                {
+                    resolved = (TDependency)CreateInstance(implement);
+                }
+
+                res.Add(resolved);
+            }
+
+            return res;
 
         }
 
@@ -78,10 +125,10 @@ namespace DIContainer
             var rMethod = typeof(DIProvider).GetMethod("Resolve");
             var rType = rMethod.MakeGenericMethod(t);
 
-            var listType = typeof(List<>);
-            var constructedListType = listType.MakeGenericType(t);
+            var lType = typeof(List<>);
+            var constructedLType = lType.MakeGenericType(t);
 
-            dynamic resolved = Convert.ChangeType(rType.Invoke(this, null), constructedListType);
+            dynamic resolved = Convert.ChangeType(rType.Invoke(this, null), constructedLType);
 
             if (resolved.Count > 1)
             {
@@ -91,6 +138,76 @@ namespace DIContainer
             {
                 return resolved[0];
             }
+        }
+
+        private ConstructorInfo GetBestConstructor(ConstructorInfo[] constructors)
+        {
+            ConstructorInfo bestConstructor = null;
+
+            var sortedConstructors = constructors.OrderBy(x => -x.GetParameters().Length);
+
+            foreach (ConstructorInfo constructor in sortedConstructors)
+            {
+                if (CheckConstructorParameters(constructor.GetParameters()))
+                {
+                    bestConstructor = constructor;
+                    break;
+                }
+            }
+            return bestConstructor;
+        }
+
+        private bool CheckConstructorParameters(ParameterInfo[] parameters)
+        {
+            foreach (ParameterInfo param in parameters)
+            {
+                if (!config.ObjectSettings.ContainsKey(param.ParameterType))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private object CreateInstance(Type t)
+        {
+            ConstructorInfo[] constructors = t.GetConstructors();
+            ConstructorInfo constructor = GetBestConstructor(constructors);
+
+            if (constructor == null)
+            {
+                throw new InvalidOperationException(string.Format("Can not create instance of type {0}. Satisfying constructor does not exist.", t));
+            }
+            ParameterInfo[] parameters = constructor.GetParameters();
+            object[] parameterInstances = new object[parameters.Length];
+
+            int i = 0;
+            foreach (var param in parameters)
+            {
+                Type paramType = param.ParameterType;
+
+                if (paramType.IsGenericType && paramType.GetGenericTypeDefinition().Equals(typeof(IEnumerable<>)))
+                {
+                    paramType = paramType.GenericTypeArguments[0];
+                }
+
+                if (paramType.IsGenericType)
+                {
+                    parameterInstances[i] = ResolveT(paramType.GetGenericTypeDefinition()
+                        .MakeGenericType(paramType.GenericTypeArguments)); ;
+                }
+                else
+                {
+                    if (config.DContainer.ContainsKey(paramType))
+                    {
+                        parameterInstances[i] = ResolveT(paramType);
+                    }
+                }
+                i++;
+            }
+
+            var instance = constructor.Invoke(parameterInstances);
+            return instance;
         }
     }
 }
