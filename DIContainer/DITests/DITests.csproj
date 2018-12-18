@@ -52,6 +52,7 @@
     <Compile Include="TestClasses\ISomeLol.cs" />
     <Compile Include="TestClasses\ISomeKek.cs" />
     <Compile Include="TestClasses\ISomething3.cs" />
+    <Compile Include="TestClasses\Smthng3Implem.cs" />
     <Compile Include="TestClasses\SomeImplementation.cs" />
     <Compile Include="TestClasses\SomeAbstractImplement.cs" />
     <Compile Include="TestClasses\Something2.cs" />

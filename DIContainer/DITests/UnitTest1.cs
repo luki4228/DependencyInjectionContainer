@@ -137,10 +137,35 @@ namespace DITests
 
             CollectionAssert.AreEquivalent(actual, expected);
 
-            // Check that IAnimal dependency is created.
             Assert.AreEqual(typeof(SomeKek), complexImplement.smthng1.GetType());
 
         }
-        
+
+        [TestMethod]
+        public void TestGenericDependencies()
+        {
+            var config = new DIConfig();
+            config.Register<ISomething3<SomethingAbstract1>, Smthng3Implem<SomethingAbstract1>>(true);
+            config.Register<SomethingAbstract1, SomeImplementation>(true);
+            var provider = new DIProvider(config);
+
+            var obj = (Smthng3Implem<SomethingAbstract1>)provider.Resolve<ISomething3<SomethingAbstract1>>()[0];
+
+            Assert.AreEqual(obj.smthng.GetType(), typeof(SomeImplementation));
+        }
+
+        [TestMethod]
+        public void TestOpenGenericDependencies()
+        {
+
+            var config = new DIConfig();
+            config.Register(typeof(ISomething3<>), typeof(Smthng3Implem<>));
+            config.Register<SomethingAbstract1, SomeImplementation>(true);
+            var provider = new DIProvider(config);
+
+            var genericObject = (Smthng3Implem<SomethingAbstract1>)provider.Resolve<ISomething3<SomethingAbstract1>>()[0];
+
+            Assert.AreEqual(genericObject.smthng.GetType(), typeof(SomeImplementation));
+        }
     }
 }

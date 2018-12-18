@@ -35,7 +35,7 @@ namespace DIContainer
                 OContainer[tImplementation] = new SingletonContainer();
             }
         }
-        public void Register(Type tDependency, Type tImplementation, bool objectSettings)
+        public void Register(Type tDependency, Type tImplementation)
         {
             if (!DContainer.ContainsKey(tDependency))
             {
@@ -45,7 +45,6 @@ namespace DIContainer
             {
                 DContainer[tDependency].Add(tImplementation);
             }
-            ObjectSettings[tDependency] = false;
         }
 
         public DIConfig()
