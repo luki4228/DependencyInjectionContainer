@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DIConfig.cs" />
+    <Compile Include="DIProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingletonContainer.cs" />
   </ItemGroup>

@@ -48,11 +48,27 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestClasses\ISomething1.cs" />
+    <Compile Include="TestClasses\ISomething2.cs" />
+    <Compile Include="TestClasses\ISomething3.cs" />
+    <Compile Include="TestClasses\SomeImplementation.cs" />
+    <Compile Include="TestClasses\SomeAbstractImplement.cs" />
+    <Compile Include="TestClasses\Something2.cs" />
+    <Compile Include="TestClasses\Something3.cs" />
+    <Compile Include="TestClasses\Something4.cs" />
+    <Compile Include="TestClasses\SomethingAbstract1.cs" />
+    <Compile Include="TestClasses\SomethingPrivate.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DIContainer\DIContainer.csproj">
+      <Project>{e94fe4f9-95ca-41c5-9361-20e08fef3083}</Project>
+      <Name>DIContainer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
