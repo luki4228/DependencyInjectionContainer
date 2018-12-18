@@ -69,13 +69,12 @@ namespace DITests
         public void TestResolvingBasicImplementation()
         {
             var config = new DIConfig();
-            config.Register<SomethingAbstract1, SomeAbstractImplement>(true);
+            config.Register<SomethingAbstract1, SomeImplementation>(true);
             var provider = new DIProvider(config);
             var obj = provider.Resolve<SomethingAbstract1>();
-            Assert.IsInstanceOfType(obj[0], typeof(SomeAbstractImplement));
+            Assert.IsInstanceOfType(obj[0], typeof(SomeImplementation));
         }
 
-        // Check for resolving dependencies that can't be created.
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestResolvingUncreatableDependencies()

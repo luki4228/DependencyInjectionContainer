@@ -19,14 +19,14 @@ namespace DIContainer
 
         public void validateConfig(DIConfig _config)
         {
-            foreach (Type depType in config.DContainer.Keys)
+            foreach (Type depType in _config.DContainer.Keys)
             {
                 if (depType.IsValueType)
                 {
                     throw new ArgumentException("TDependency must be a ref type");
                 }
 
-                foreach (Type implemType in config.DContainer[depType])
+                foreach (Type implemType in _config.DContainer[depType])
                 {
                     if (!depType.IsAssignableFrom(implemType) && !depType.IsGenericTypeDefinition)
                     {

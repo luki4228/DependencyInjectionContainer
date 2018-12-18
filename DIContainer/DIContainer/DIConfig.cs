@@ -19,16 +19,20 @@ namespace DIContainer
             if (!DContainer.ContainsKey(tDependency))
             {
                 DContainer[tDependency] = new List<Type>();
-            }
-            if (!DContainer[tDependency].Contains(tImplementation))
-            {
                 DContainer[tDependency].Add(tImplementation);
             }
-            ObjectSettings[tDependency] = objectSettings;
-
-            if (ObjectSettings[tDependency])
+            else
             {
-                OContainer[tDependency] = new SingletonContainer();
+                if (!DContainer[tDependency].Contains(tImplementation))
+                {
+                    DContainer[tDependency].Add(tImplementation);
+                }
+            }
+            ObjectSettings[tImplementation] = objectSettings;
+
+            if (objectSettings)
+            {
+                OContainer[tImplementation] = new SingletonContainer();
             }
         }
         public void Register(Type tDependency, Type tImplementation, bool objectSettings)
