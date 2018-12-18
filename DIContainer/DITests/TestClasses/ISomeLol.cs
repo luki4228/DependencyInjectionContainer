@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DITests.TestClasses
 {
-    public interface ISomething2
+    public interface ISomeLol
     {
-
+        void Lolirovat();
     }
 }

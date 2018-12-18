@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DITests.TestClasses
 {
-    public interface ISomething1
+    public class SomeLol : ISomeLol
     {
+        public void Lolirovat()
+        {
+            Console.Write("LOOOOOOL");
+        }
     }
 }

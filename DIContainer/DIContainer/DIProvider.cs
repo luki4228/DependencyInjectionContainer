@@ -144,29 +144,9 @@ namespace DIContainer
         {
             ConstructorInfo bestConstructor = null;
 
-            var sortedConstructors = constructors.OrderBy(x => -x.GetParameters().Length);
-
-            foreach (ConstructorInfo constructor in sortedConstructors)
-            {
-                if (CheckConstructorParameters(constructor.GetParameters()))
-                {
-                    bestConstructor = constructor;
-                    break;
-                }
-            }
+            var sortedConstructors = constructors.OrderBy(x => x.GetParameters().Length);
+            bestConstructor = constructors.Last();
             return bestConstructor;
-        }
-
-        private bool CheckConstructorParameters(ParameterInfo[] parameters)
-        {
-            foreach (ParameterInfo param in parameters)
-            {
-                if (!config.ObjectSettings.ContainsKey(param.ParameterType))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
 
         private object CreateInstance(Type t)

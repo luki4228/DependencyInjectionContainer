@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DITests.TestClasses
 {
-    public class Something4
+    class AnotherLol : ISomeLol
     {
+        public void Lolirovat()
+        {
+            Console.Write("LOL KEK 4EBUREK");
+        }
     }
 }

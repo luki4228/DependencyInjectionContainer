@@ -85,6 +85,62 @@ namespace DITests
             var obj = provider.Resolve<SomethingAbstract1>();
         }
 
+        [TestMethod]
+        public void TestResolvingMultipleImplementations()
+        {
+            var config = new DIConfig();
+            config.Register<SomethingAbstract1, SomeImplementation>(true);
+            config.Register<SomethingAbstract1, Something2>(true);
+            var provider = new DIProvider(config);
+            var resolved = provider.Resolve<SomethingAbstract1>();
+            Assert.AreEqual(resolved.Count, 2);
 
+            Type[] actual = new Type[] { resolved[0].GetType(), resolved[1].GetType() };
+            Type[] expected = new Type[] { typeof(Something2), typeof(SomeImplementation) };
+
+            CollectionAssert.AreEquivalent(actual, expected);
+        }
+
+        [TestMethod]
+        public void TestSingletonDependencies()
+        {
+            var config = new DIConfig();
+            config.Register<SomethingAbstract1, SomeImplementation>(true);
+            config.Register<ISomeKek, SomeKek>(false);
+            var provider = new DIProvider(config);
+
+            var obj1 = provider.Resolve<SomethingAbstract1>()[0];
+            var obj2 = provider.Resolve<SomethingAbstract1>()[0];
+
+            Assert.AreSame(obj1, obj2);
+
+            var obj3 = provider.Resolve<ISomeKek>()[0];
+            var obj4 = provider.Resolve<ISomeKek>()[0];
+
+            Assert.AreNotSame(obj3, obj4);
+        }
+
+        [TestMethod]
+        public void TestRecursiveDependencies()
+        {
+            var config = new DIConfig();
+            config.Register<SomethingAbstract1, Something2>(true);
+            config.Register<ISomeLol, SomeLol>(true);
+            config.Register<ISomeLol, AnotherLol>(true);
+            config.Register<ISomeKek, SomeKek>(true);
+            var provider = new DIProvider(config);
+
+            var complexImplement = (Something2)provider.Resolve<SomethingAbstract1>()[0];
+
+            Type[] actual = new Type[] { complexImplement.smthng2[0].GetType(), complexImplement.smthng2[1].GetType() };
+            Type[] expected = new Type[] { typeof(SomeLol), typeof(AnotherLol) };
+
+            CollectionAssert.AreEquivalent(actual, expected);
+
+            // Check that IAnimal dependency is created.
+            Assert.AreEqual(typeof(SomeKek), complexImplement.smthng1.GetType());
+
+        }
+        
     }
 }

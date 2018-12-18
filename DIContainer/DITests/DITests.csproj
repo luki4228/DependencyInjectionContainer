@@ -48,14 +48,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestClasses\ISomething1.cs" />
-    <Compile Include="TestClasses\ISomething2.cs" />
+    <Compile Include="TestClasses\AnotherLol.cs" />
+    <Compile Include="TestClasses\ISomeLol.cs" />
+    <Compile Include="TestClasses\ISomeKek.cs" />
     <Compile Include="TestClasses\ISomething3.cs" />
     <Compile Include="TestClasses\SomeImplementation.cs" />
     <Compile Include="TestClasses\SomeAbstractImplement.cs" />
     <Compile Include="TestClasses\Something2.cs" />
-    <Compile Include="TestClasses\Something3.cs" />
-    <Compile Include="TestClasses\Something4.cs" />
+    <Compile Include="TestClasses\SomeLol.cs" />
+    <Compile Include="TestClasses\SomeKek.cs" />
     <Compile Include="TestClasses\SomethingAbstract1.cs" />
     <Compile Include="TestClasses\SomethingPrivate.cs" />
     <Compile Include="UnitTest1.cs" />
